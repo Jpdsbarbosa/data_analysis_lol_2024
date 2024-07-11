@@ -40,6 +40,9 @@ def upload_to_github(file_path, repo, branch, token):
         print(f"Arquivo '{file_name}' enviado com sucesso para o GitHub.")
     else:
         print(f"Erro ao enviar arquivo para o GitHub: {response.json()}")
+        print(f"URL: {url}")
+        print(f"Headers: {headers}")
+        print(f"Data: {data}")
 
 try:
     # Download do CSV
