@@ -13,6 +13,9 @@ GITHUB_TOKEN = os.getenv('MY_GITHUB_TOKEN')
 GITHUB_REPO = os.getenv('GITHUB_REPO')
 GITHUB_BRANCH = os.getenv('GITHUB_BRANCH', 'main')
 
+# Configurações do Google Drive
+GOOGLE_DRIVE_FILE_ID = os.getenv('GOOGLE_DRIVE_FILE_ID')
+
 # Função auxiliar para calcular o hash SHA-1 de um arquivo
 def calculate_file_sha1(file_path):
     BUF_SIZE = 65536  # Vamos ler o arquivo em pedaços de 64kb
@@ -76,8 +79,7 @@ def upload_to_github(file_path, repo, branch, token):
 
 try:
     # URL do arquivo CSV no Google Drive
-    file_id = "1IjIEhLc9n8eLKeY-yh_YigKVWbhgGBsN"
-    download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+    download_url = f"https://drive.google.com/uc?export=download&id={GOOGLE_DRIVE_FILE_ID}"
     print(f"Download URL: {download_url}")
 
     # Download do CSV
