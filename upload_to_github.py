@@ -16,9 +16,13 @@ GITHUB_BRANCH = os.getenv('GITHUB_BRANCH', 'main')
 if not GITHUB_TOKEN or not GITHUB_REPO:
     raise ValueError("Certifique-se de que as variáveis de ambiente MY_GITHUB_TOKEN e GITHUB_REPO estão definidas no arquivo .env")
 
+print(f"GITHUB_REPO: {GITHUB_REPO}")
+print(f"GITHUB_BRANCH: {GITHUB_BRANCH}")
+
 # URL do arquivo CSV no Google Drive
 file_id = "1IjIEhLc9n8eLKeY-yh_YigKVWbhgGBsN"
 download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+print(f"Download URL: {download_url}")
 
 # Função para fazer upload do arquivo para o GitHub
 def upload_to_github(file_path, repo, branch, token):
