@@ -84,12 +84,8 @@ try:
     response = requests.get(download_url)
     response.raise_for_status()
 
-    # Extrair o nome do arquivo do cabeçalho da resposta
-    content_disposition = response.headers.get('content-disposition')
-    if content_disposition:
-        file_name = content_disposition.split('filename=')[1].strip('"')
-    else:
-        file_name = 'data_latest.csv'  # Nome padrão caso o cabeçalho não esteja presente
+    # Nome fixo para o arquivo
+    file_name = 'data_latest.csv'
 
     # Salvar o arquivo baixado localmente como CSV
     local_csv_path = os.path.join(os.getcwd(), file_name)
