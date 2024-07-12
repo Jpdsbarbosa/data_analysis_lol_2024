@@ -8,13 +8,13 @@ import base64
 load_dotenv()
 
 # Configurações do GitHub
-GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+GITHUB_TOKEN = os.getenv('MY_GITHUB_TOKEN')
 GITHUB_REPO = os.getenv('GITHUB_REPO')
 GITHUB_BRANCH = os.getenv('GITHUB_BRANCH', 'main')
 
 # Verificar se as variáveis de ambiente foram carregadas corretamente
 if not GITHUB_TOKEN or not GITHUB_REPO:
-    raise ValueError("Certifique-se de que as variáveis de ambiente GITHUB_TOKEN e GITHUB_REPO estão definidas no arquivo .env")
+    raise ValueError("Certifique-se de que as variáveis de ambiente MY_GITHUB_TOKEN e GITHUB_REPO estão definidas no arquivo .env")
 
 # URL do arquivo CSV no Google Drive
 file_id = "1IjIEhLc9n8eLKeY-yh_YigKVWbhgGBsN"
