@@ -26,21 +26,34 @@ print(f"Download URL: {download_url}")
 
 # Função para fazer upload do arquivo para o GitHub
 def upload_to_github(file_path, repo, branch, token):
-    with open(file_path, 'rb') as file:
-        content = base64.b64encode(file.read()).decode('utf-8')
     file_name = os.path.basename(file_path)
     url = f"https://api.github.com/repos/{repo}/contents/{file_name}"
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json"
     }
+    
+    # Verificar se o arquivo já existe
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        sha = response.json()['sha']
+    else:
+        sha = None
+    
+    with open(file_path, 'rb') as file:
+        content = base64.b64encode(file.read()).decode('utf-8')
+    
     data = {
         "message": f"Upload {file_name}",
         "content": content,
         "branch": branch
     }
+    
+    if sha:
+        data["sha"] = sha
+    
     response = requests.put(url, headers=headers, data=json.dumps(data))
-    if response.status_code == 201:
+    if response.status_code in [200, 201]:
         print(f"Arquivo '{file_name}' enviado com sucesso para o GitHub.")
     else:
         print(f"Erro ao enviar arquivo para o GitHub: {response.json()}")
