@@ -5,20 +5,20 @@ from dotenv import load_dotenv
 import base64
 import hashlib
 
-# Carregar variáveis de ambiente do arquivo .env
+# Load environment variables from the .env file
 load_dotenv()
 
-# Configurações do GitHub
+# GitHub configurations
 GITHUB_TOKEN = os.getenv('MY_GITHUB_TOKEN')
 GITHUB_REPO = os.getenv('GITHUB_REPO')
 GITHUB_BRANCH = os.getenv('GITHUB_BRANCH', 'main')
 
-# Configurações do Google Drive
+# Google Drive configurations
 GOOGLE_DRIVE_FILE_ID = os.getenv('GOOGLE_DRIVE_FILE_ID')
 
-# Função auxiliar para calcular o hash SHA-1 de um arquivo
+# Helper function to calculate the SHA-1 hash of a file
 def calculate_file_sha1(file_path):
-    BUF_SIZE = 65536  # Vamos ler o arquivo em pedaços de 64kb
+    BUF_SIZE = 65536  # We will read the file in chunks of 64kb
     sha1 = hashlib.sha1()
 
     with open(file_path, 'rb') as f:
@@ -30,7 +30,7 @@ def calculate_file_sha1(file_path):
     
     return sha1.hexdigest()
 
-# Função para fazer upload do arquivo para o GitHub
+# Function to upload the file to GitHub
 def upload_to_github(file_path, repo, branch, token):
     file_name = os.path.basename(file_path)
     url = f"https://api.github.com/repos/{repo}/contents/{file_name}"
@@ -39,11 +39,11 @@ def upload_to_github(file_path, repo, branch, token):
         "Accept": "application/vnd.github.v3+json"
     }
     
-    # Verificar se o arquivo já existe no GitHub
+    # Check if the file already exists on GitHub
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         sha = response.json()['sha']
-        # Baixar o arquivo existente para comparar
+        # Download the existing file to compare
         download_url = response.json()['download_url']
         existing_file_response = requests.get(download_url)
         existing_file_sha1 = hashlib.sha1(existing_file_response.content).hexdigest()
@@ -51,12 +51,12 @@ def upload_to_github(file_path, repo, branch, token):
         sha = None
         existing_file_sha1 = None
     
-    # Calcular o SHA-1 do arquivo local
+    # Calculate the SHA-1 of the local file
     local_file_sha1 = calculate_file_sha1(file_path)
     
-    # Se os hashes são iguais, não é necessário atualizar o arquivo no GitHub
+    # If the hashes are the same, there is no need to update the file on GitHub
     if existing_file_sha1 == local_file_sha1:
-        print(f"O arquivo '{file_name}' já está atualizado no GitHub. Upload não necessário.")
+        print(f"The file '{file_name}' is already up to date on GitHub. Upload not necessary.")
         return
     
     with open(file_path, 'rb') as file:
@@ -73,36 +73,36 @@ def upload_to_github(file_path, repo, branch, token):
     
     response = requests.put(url, headers=headers, data=json.dumps(data))
     if response.status_code in [200, 201]:
-        print(f"Arquivo '{file_name}' enviado com sucesso para o GitHub.")
+        print(f"File '{file_name}' successfully uploaded to GitHub.")
     else:
-        print(f"Erro ao enviar arquivo para o GitHub: {response.json()}")
+        print(f"Error uploading file to GitHub: {response.json()}")
 
 try:
-    # URL do arquivo CSV no Google Drive
+    # URL of the CSV file on Google Drive
     download_url = f"https://drive.google.com/uc?export=download&id={GOOGLE_DRIVE_FILE_ID}"
     print(f"Download URL: {download_url}")
 
-    # Download do CSV
+    # Download the CSV
     response = requests.get(download_url)
     response.raise_for_status()
 
-    # Nome fixo para o arquivo
+    # Fixed name for the file
     file_name = 'data_latest.csv'
 
-    # Salvar o arquivo baixado localmente como CSV
+    # Save the downloaded file locally as CSV
     local_csv_path = os.path.join(os.getcwd(), file_name)
     with open(local_csv_path, 'wb') as f:
         f.write(response.content)
 
-    print(f"Arquivo CSV baixado e salvo em: {local_csv_path}")
+    print(f"CSV file downloaded and saved to: {local_csv_path}")
 
-    # Fazer upload do arquivo CSV para o GitHub
+    # Upload the CSV file to GitHub
     upload_to_github(local_csv_path, GITHUB_REPO, GITHUB_BRANCH, GITHUB_TOKEN)
 
 except requests.exceptions.RequestException as e:
-    print(f"Erro ao baixar o arquivo: {e}")
+    print(f"Error downloading the file: {e}")
 
 except Exception as e:
-    print(f"Erro inesperado: {e}")
+    print(f"Unexpected error: {e}")
     import traceback
     traceback.print_exc()
