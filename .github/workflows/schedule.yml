@@ -2,10 +2,13 @@ name: Schedule Python Script
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Executa a cada 6 horas
+    - cron: '*/1 * * * *'  # Executa a cada minuto para testes
   push:
     branches:
       - main
+
+permissions:
+  contents: write  # Permissão para ler e escrever conteúdo no repositório
 
 jobs:
   run-script:
