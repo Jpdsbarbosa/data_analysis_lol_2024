@@ -9,12 +9,18 @@ import hashlib
 load_dotenv()
 
 # GitHub configurations
-GITHUB_TOKEN = os.getenv('MY_GITHUB_TOKEN')
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 GITHUB_REPO = os.getenv('GITHUB_REPO')
 GITHUB_BRANCH = os.getenv('GITHUB_BRANCH', 'main')
 
 # Google Drive configurations
 GOOGLE_DRIVE_FILE_ID = os.getenv('GOOGLE_DRIVE_FILE_ID')
+
+# Print loaded environment variables for debugging
+print(f"GITHUB_TOKEN: {GITHUB_TOKEN}")
+print(f"GITHUB_REPO: {GITHUB_REPO}")
+print(f"GITHUB_BRANCH: {GITHUB_BRANCH}")
+print(f"GOOGLE_DRIVE_FILE_ID: {GOOGLE_DRIVE_FILE_ID}")
 
 # Helper function to calculate the SHA-1 hash of a file
 def calculate_file_sha1(file_path):
@@ -41,18 +47,21 @@ def upload_to_github(file_path, repo, branch, token):
     
     # Check if the file already exists on GitHub
     response = requests.get(url, headers=headers)
+    print(f"GitHub GET response status: {response.status_code}")
     if response.status_code == 200:
         sha = response.json()['sha']
         # Download the existing file to compare
         download_url = response.json()['download_url']
         existing_file_response = requests.get(download_url)
         existing_file_sha1 = hashlib.sha1(existing_file_response.content).hexdigest()
+        print(f"Existing file SHA-1: {existing_file_sha1}")
     else:
         sha = None
         existing_file_sha1 = None
     
     # Calculate the SHA-1 of the local file
     local_file_sha1 = calculate_file_sha1(file_path)
+    print(f"Local file SHA-1: {local_file_sha1}")
     
     # If the hashes are the same, there is no need to update the file on GitHub
     if existing_file_sha1 == local_file_sha1:
@@ -72,6 +81,7 @@ def upload_to_github(file_path, repo, branch, token):
         data["sha"] = sha
     
     response = requests.put(url, headers=headers, data=json.dumps(data))
+    print(f"GitHub PUT response status: {response.status_code}")
     if response.status_code in [200, 201]:
         print(f"File '{file_name}' successfully uploaded to GitHub.")
     else:
