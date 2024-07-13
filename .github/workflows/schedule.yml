@@ -2,7 +2,7 @@ name: Schedule Python Script
 
 on:
   schedule:
-    - cron: '*/1 * * * *'  # Executa a cada minuto para testes
+    - cron: '0 */6 * * *'  # Executa a cada 6 horas
   push:
     branches:
       - main
@@ -33,4 +33,5 @@ jobs:
         MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
         GITHUB_REPO: Jpdsbarbosa/data_analysis_lol_2024
         GITHUB_BRANCH: main
+        GOOGLE_DRIVE_FILE_ID: ${{ secrets.GOOGLE_DRIVE_FILE_ID }}
       run: python upload_to_github.py
