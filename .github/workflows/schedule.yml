@@ -2,7 +2,7 @@ name: Schedule Python Script
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Executa a cada 6 horas
+    - cron: '*/1 * * * *'  # Executa a cada minuto
   push:
     branches:
       - main
