@@ -9,7 +9,7 @@ import hashlib
 load_dotenv()
 
 # GitHub configurations
-GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN') or os.getenv('MY_GITHUB_TOKEN')
 GITHUB_REPO = os.getenv('GITHUB_REPO')
 GITHUB_BRANCH = os.getenv('GITHUB_BRANCH', 'main')
 
