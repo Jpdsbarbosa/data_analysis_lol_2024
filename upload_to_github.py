@@ -24,7 +24,7 @@ print(f"GOOGLE_DRIVE_FILE_ID: {GOOGLE_DRIVE_FILE_ID}")
 
 # Helper function to calculate the SHA-1 hash of a file
 def calculate_file_sha1(file_path):
-    BUF_SIZE = 65536  # We will read the file in chunks of 64kb
+    BUF_SIZE = 65536  # read the file in chunks of 64kb
     sha1 = hashlib.sha1()
 
     with open(file_path, 'rb') as f:

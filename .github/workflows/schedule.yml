@@ -8,7 +8,7 @@ on:
       - main
 
 permissions:
-  contents: write  # Permissão para ler e escrever conteúdo no repositório
+  contents: write  
 
 jobs:
   run-script:
